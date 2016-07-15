@@ -60,7 +60,7 @@ public class MediaPicker extends CordovaPlugin {
                         // String fileName = "AUDIO_" + Base64.encodeToString(intent.getData().getPath().getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
                         // String destPath = cordova.getActivity().getFilesDir() + "/" + fileName + "." + extension;
                         // if (copyUriToPath(uri, destPath)) {
-                    JSONObject mediaInfo = getMediaInfoFromPath(uri.toString());
+                    JSONObject mediaInfo = getMediaInfoFromPath(uri);
                     mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, mediaInfo));
                         // } else {
                         //     mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Error copying file"));
@@ -145,7 +145,7 @@ public class MediaPicker extends CordovaPlugin {
         return true;
     }
 
-    private JSONObject getMediaInfoFromPath(String path) {
+    private JSONObject getMediaInfoFromPath(Uri uri) {
         JSONObject mediaInfo = new JSONObject();
 
         String artist = "No Artist";
@@ -155,7 +155,7 @@ public class MediaPicker extends CordovaPlugin {
         String image = "No Image";
 
         MediaMetadataRetriever metaRetriver = new MediaMetadataRetriever();
-        metaRetriver.setDataSource(path);
+        metaRetriver.setDataSource(this.cordova.getActivity().getApplicationContext(), uri);
 
         try {
             artist = metaRetriver.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
@@ -185,7 +185,7 @@ public class MediaPicker extends CordovaPlugin {
             mediaInfo.put("albumTitle", album);
             mediaInfo.put("title", title);
             mediaInfo.put("duration", duration);
-            mediaInfo.put("exportedurl", "file://" + path);
+            mediaInfo.put("exportedurl", uri.toString());
             mediaInfo.put("image", image);
         } catch (JSONException e) {
             e.printStackTrace();
