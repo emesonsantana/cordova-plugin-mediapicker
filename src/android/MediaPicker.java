@@ -55,19 +55,19 @@ public class MediaPicker extends CordovaPlugin {
             if (REQUEST_PICK_AUDIO == requestCode) {
                 if (Activity.RESULT_OK == resultCode) {
                     Uri uri = intent.getData();
-                    String extension = getUriExtension(uri);
-                    if (extension != null) {
-                        String fileName = "AUDIO_" + Base64.encodeToString(intent.getData().getPath().getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-                        String destPath = cordova.getActivity().getFilesDir() + "/" + fileName + "." + extension;
-                        if (copyUriToPath(uri, destPath)) {
-                            JSONObject mediaInfo = getMediaInfoFromPath(destPath);
-                            mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, mediaInfo));
-                        } else {
-                            mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Error copying file"));
-                        }
-                    } else {
-                        mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Invalid file"));
-                    }
+                    // String extension = getUriExtension(uri);
+                    // if (extension != null) {
+                        // String fileName = "AUDIO_" + Base64.encodeToString(intent.getData().getPath().getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+                        // String destPath = cordova.getActivity().getFilesDir() + "/" + fileName + "." + extension;
+                        // if (copyUriToPath(uri, destPath)) {
+                    JSONObject mediaInfo = getMediaInfoFromPath(uri.toString());
+                    mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, mediaInfo));
+                        // } else {
+                        //     mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Error copying file"));
+                        // }
+                    // } else {
+                    //     mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Invalid file"));
+                    // }
                 } else {
                     mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Selection canceld"));
                 }
